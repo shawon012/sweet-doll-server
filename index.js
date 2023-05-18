@@ -20,6 +20,23 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
+
+const verifyJwt = (req, res, next) => {
+    const authorization = req.headers.authorization;
+    if(!authorization){
+        return res.status(401).send({error: true, message: 'unauthorized access'});
+    }
+    const token = authorization.split(' ')[1];
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) =>{
+        if(err){
+            return res.status(401).send({error: true, message: 'unauthorized access'})
+        }
+        req.decoded = decoded;
+        next();
+    })
+    
+}
+
 async function run() {
     try {
       // Connect the client to the server	(optional starting in v4.7)
@@ -44,7 +61,7 @@ async function run() {
       })
 
     //   single product
-    app.get('/products/:id', async(req, res) =>{
+    app.get('/products/:id', verifyJwt, async(req, res) =>{
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const options = {
