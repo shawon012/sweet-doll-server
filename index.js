@@ -28,6 +28,14 @@ async function run() {
       const productCollection = client.db('sweetDoll').collection('products')
       const myProductCollection = client.db('sweetDoll').collection('myProducts')
 
+    //   jwt function 
+    app.post('/jwt', (req, res) =>{
+        const user = req.body;
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
+        console.log(token)
+        res.send({token})
+    })
+
         // all products
       app.get('/products', async(req, res) =>{
         const cursor = productCollection.find();
