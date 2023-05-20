@@ -18,7 +18,8 @@ const client = new MongoClient(uri, {
         version: ServerApiVersion.v1,
         strict: true,
         deprecationErrors: true,
-    }
+    },
+   
 });
 
 const verifyJwt = (req, res, next) => {
@@ -65,7 +66,7 @@ async function run() {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)}
         const options = {
-            projection: {toyName:1, sellerName:1, sellerEmail:1, price:1, rating:1, availableQuantity:1, detailDescription:1}
+            projection: {toyName:1, photoUrl:1, sellerName:1, sellerEmail:1, price:1, rating:1, availableQuantity:1, detailDescription:1}
         }
         const result = await productCollection.findOne(query, options)
         res.send(result)
