@@ -80,23 +80,24 @@ async function run() {
     })
 
     // update one product
-    app.put('/products/:id', async(req, res) =>{
+    app.patch('/products/:id', async(req, res) =>{
         const id = req.params.id;
         const filter = {_id: new ObjectId(id)}
-        const options = {upsert: true};
         const updatedProduct = req.body;
         const product ={
             $set: {
+                photoUrl: updatedProduct. photoUrl,
                 toyName:updatedProduct.toyName, 
                 sellerName:updatedProduct.sellerName, 
                 sellerEmail:updatedProduct.sellerEmail, 
                 price:updatedProduct.price, 
                 rating:updatedProduct.rating, 
                 availableQuantity:updatedProduct.availableQuantity, 
-                detailDescription:updatedProduct.detailDescription
+                detailDescription:updatedProduct.detailDescription,
+                category: updatedProduct.category
             }
         }
-        const result = await productCollection.updateOne(filter, product, options)
+        const result = await productCollection.updateOne(filter, product);
         res.send(result)
     })
 
